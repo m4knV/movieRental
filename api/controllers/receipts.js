@@ -40,15 +40,20 @@ exports.receipts_create_receipts = (req, res, next) => {
                     message: "Order not found"
                 });
             }
-            console.log("this is the order quantity");
-            console.log(order.quantity);
-            console.log("this is the end");
+            console.log("These are the days:");
+            console.log(order.daysPassed);
+            console.log("this is the end of days!");
+
             let finalPrice;
-            if (order.quantity <= 3) {
-                finalPrice = order.quantity * 1;
+            if (order.daysPassed <= 3) {
+                finalPrice = order.daysPassed * 1;
             } else {
-                finalPrice = 3 + ((order.quantity - 3) * 0.5);
+                finalPrice = 3 + ((order.daysPassed - 3) * 0.5);
             }
+            console.log("The final Price is:");
+            console.log(finalPrice);
+            console.log("End of final Price!");
+
             const receipt = new Receipt({
                 _id: mongoose.Types.ObjectId(),
                 order: req.body.orderId,
