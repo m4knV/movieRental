@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const Order = require("../models/order");
 const Product = require("../models/product");
+const Inventory = require("../models/inventory");
 
 exports.orders_get_all = (req, res, next) => {
   Order.find()
@@ -87,7 +88,13 @@ exports.orders_make_order = (req, res, next) => {
           user: "5d6d1720062f6d1006ee21e7",
           daysPassed: 1
         });
-        return order.save();
+        const inventory = new Inventory({
+          _id: mongoose.Types.ObjectId(),
+          product: product._id,
+          available: "yes"
+        });
+        order.save();
+        return inventory.save();
       })
       .then(result => {
         console.log(result);

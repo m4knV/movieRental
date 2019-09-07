@@ -8,6 +8,7 @@ const productRoutes = require("./api/routes/products");
 const orderRoutes = require("./api/routes/orders");
 const userRoutes = require('./api/routes/user');
 const receiptRoutes = require('./api/routes/receipts');
+const inventoryRoutes = require('./api/routes/inventory');
 
 mongoose.connect(
   "mongodb+srv://movie-rental:movie-rental@cluster0-q3tdj.mongodb.net/test?retryWrites=true&w=majority",
@@ -40,6 +41,7 @@ app.use("/products", productRoutes);
 app.use("/orders", orderRoutes);
 app.use("/user", userRoutes);
 app.use("/receipts", receiptRoutes);
+app.use("/inventory", inventoryRoutes);
 
 app.use((req, res, next) => {
   const error = new Error("Not found");
