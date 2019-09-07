@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const Receipt = require("../models/receipt");
 const Order = require("../models/order");
+const InventoryController = require("../controllers/inventory");
 
 exports.receipts_get_all = (req, res, next) => {
     Receipt.find()
