@@ -84,6 +84,52 @@ exports.receipts_create_receipts = (req, res, next) => {
         });
 };
 
+exports.receipts_return_order = (req, res, next) => {
+    const orderId = req.params.orderId;
+    Order.findById(orderId)
+        .then(order => {
+            if (!order) {
+                return res.status(404).json({
+                    message: "Order not found"
+                });
+            }
+
+            let finalPrice;
+            if (order.daysPassed <= 3) {
+                finalPrice = order.daysPassed * 1;
+            } else {
+                finalPrice = 3 + ((order.daysPassed - 3) * 0.5);
+            }
+            const receipt = new Receipt({
+                _id: mongoose.Types.ObjectId(),
+                order: orderId,
+                price: finalPrice
+            });
+            return receipt.save();
+        })
+        .then(result => {
+            console.log(result);
+            res.status(201).json({
+                message: "Receipt stored",
+                createdOrder: {
+                    _id: result._id,
+                    order: result.orderId,
+                    price: result.price
+                },
+                request: {
+                    type: "GET",
+                    url: "http://localhost:3000/orders/" + result._id
+                }
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+};
+
 // exports.orders_get_order = (req, res, next) => {
 //     Order.findById(req.params.orderId)
 //         .populate("product")

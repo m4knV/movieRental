@@ -72,6 +72,47 @@ exports.orders_create_order = (req, res, next) => {
     });
 };
 
+exports.orders_make_order = (req, res, next) => {
+  const productId = req.params.productId;
+  Product.findById(productId)
+      .then(product => {
+        if (!product) {
+          return res.status(404).json({
+            message: "Product not found"
+          });
+        }
+        const order = new Order({
+          _id: mongoose.Types.ObjectId(),
+          product: product._id,
+          user: "5d6d1720062f6d1006ee21e7",
+          daysPassed: 1
+        });
+        return order.save();
+      })
+      .then(result => {
+        console.log(result);
+        res.status(201).json({
+          message: "Order stored",
+          createdOrder: {
+            _id: result._id,
+            product: result.product,
+            user: result.user,
+            daysPassed: result.daysPassed
+          },
+          request: {
+            type: "GET",
+            url: "http://localhost:3000/orders/" + result._id
+          }
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json({
+          error: err
+        });
+      });
+};
+
 exports.orders_get_order = (req, res, next) => {
   Order.findById(req.params.orderId)
     .populate("product")
