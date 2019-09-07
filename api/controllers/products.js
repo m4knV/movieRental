@@ -65,6 +65,33 @@ exports.products_get_genre = (req, res, next) => {
       });
 };
 
+exports.products_get_year = (req, res, next) => {
+  const year = req.params.year;
+  Product.find({"year": year})
+      .select("_id title genre descr year")
+      .exec()
+      .then(doc => {
+        console.log("From database", doc);
+        if (doc) {
+          res.status(200).json({
+            product: doc,
+            request: {
+              type: "GET",
+              url: "http://localhost:3000/products"
+            }
+          });
+        } else {
+          res
+              .status(404)
+              .json({ message: "No valid entry found for provided ID" });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json({ error: err });
+      });
+};
+
 exports.products_create_product = (req, res, next) => {
   const product = new Product({
     _id: new mongoose.Types.ObjectId(),

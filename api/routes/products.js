@@ -34,7 +34,9 @@ router.get("/", ProductsController.products_get_all);
 
 router.post("/", checkAuth, ProductsController.products_create_product);
 
-router.get("/:genre", ProductsController.products_get_genre);
+router.get("/genre/:genre", ProductsController.products_get_genre);
+
+router.get("/year/:year", ProductsController.products_get_year);
 
 router.get("/:productId", ProductsController.products_get_product);
 
