@@ -3,6 +3,12 @@ const mongoose = require("mongoose");
 const Movie = require("../models/movie");
 const Inventory = require("../models/inventory");
 
+/**
+ * Handler that displays the whole inventory of the user with his rented movies
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.inventory_get_all = (req, res, next) => {
     Inventory.find()
         .select("movie available _id")

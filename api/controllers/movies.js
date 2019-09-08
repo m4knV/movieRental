@@ -1,6 +1,12 @@
 const mongoose = require("mongoose");
 const Movie = require("../models/movie");
 
+/**
+ * Handler that displays all the available movies
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.movie_get_all = (req, res, next) => {
   Movie.find()
     .select("_id title genre descr year")
@@ -38,6 +44,12 @@ exports.movie_get_all = (req, res, next) => {
     });
 };
 
+/**
+ * Handler that displays the available movies based on their genre
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.movie_get_genre = (req, res, next) => {
   const genre = req.params.genre;
   Movie.find({"genre": genre})
@@ -65,6 +77,12 @@ exports.movie_get_genre = (req, res, next) => {
       });
 };
 
+/**
+ * Handler that displays the available movies based on their year of production
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.movie_get_year = (req, res, next) => {
   const year = req.params.year;
   Movie.find({"year": year})
@@ -92,6 +110,12 @@ exports.movie_get_year = (req, res, next) => {
       });
 };
 
+/**
+ * Handler that creates a new movie title by a POST request with a body
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.movie_create_movie = (req, res, next) => {
   const movie = new Movie({
     _id: new mongoose.Types.ObjectId(),
@@ -127,6 +151,12 @@ exports.movie_create_movie = (req, res, next) => {
     });
 };
 
+/**
+ * Handler that displays a specific movie based on its id
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.movie_get_movie = (req, res, next) => {
   const id = req.params.movieId;
   Movie.findById(id)
@@ -153,7 +183,12 @@ exports.movie_get_movie = (req, res, next) => {
       res.status(500).json({ error: err });
     });
 };
-
+/**
+ * Handler that updates a movies
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.movie_update_movie = (req, res, next) => {
   const id = req.params.movieId;
   const updateOps = {};
@@ -179,6 +214,12 @@ exports.movie_update_movie = (req, res, next) => {
     });
 };
 
+/**
+ * Handler that deletes a movie
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.movie_delete = (req, res, next) => {
   const id = req.params.movieId;
   Movie.remove({ _id: id })

@@ -4,6 +4,12 @@ const Rental = require("../models/rental");
 const Movie = require("../models/movie");
 const Inventory = require("../models/inventory");
 
+/**
+ * Handler that displays all the rentals of a user
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.rentals_get_all = (req, res, next) => {
   Rental.find()
     .select("movie user daysPassed _id")
@@ -33,6 +39,12 @@ exports.rentals_get_all = (req, res, next) => {
     });
 };
 
+/**
+ * Handler that creates a new rental from a POST request with a body
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.rentals_create_rental = (req, res, next) => {
   Movie.findById(req.body.movieId)
     .then(movie => {
@@ -73,6 +85,12 @@ exports.rentals_create_rental = (req, res, next) => {
     });
 };
 
+/**
+ * Handler that creates a new rental for a user by providing a specific movieId and adding the movie to its inventory
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.rentals_make_rental = (req, res, next) => {
   const movieId = req.params.movieId;
   Movie.findById(movieId)
@@ -120,6 +138,12 @@ exports.rentals_make_rental = (req, res, next) => {
       });
 };
 
+/**
+ * Handler that displays a specific rental based on its id
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.rentals_get_rental = (req, res, next) => {
   Rental.findById(req.params.rentalId)
     .populate("movie")
@@ -145,6 +169,12 @@ exports.rentals_get_rental = (req, res, next) => {
     });
 };
 
+/**
+ * Handler that deletes a rental with a DELETE request
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.rentals_delete_rental = (req, res, next) => {
   Rental.remove({ _id: req.params.rentalId })
     .exec()

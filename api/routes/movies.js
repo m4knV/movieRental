@@ -31,9 +31,8 @@ const upload = multer({
   fileFilter: fileFilter
 });
 
+// Handle GET requests
 router.get("/", MoviesController.movie_get_all);
-
-router.post("/", checkAuth, MoviesController.movie_create_movie);
 
 router.get("/genre/:genre", MoviesController.movie_get_genre);
 
@@ -41,10 +40,15 @@ router.get("/year/:year", MoviesController.movie_get_year);
 
 router.get("/:movieId", MoviesController.movie_get_movie);
 
+// Handle POST requests
+router.post("/", checkAuth, MoviesController.movie_create_movie);
+
 router.post("/:movieId/rent", RentalsController.rentals_make_rental);
 
+// Handle PATCH requests
 router.patch("/:movieId", checkAuth, MoviesController.movie_update_movie);
 
+// Handle DELETE requests
 router.delete("/:movieId", checkAuth, MoviesController.movie_delete);
 
 module.exports = router;

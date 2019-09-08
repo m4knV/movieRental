@@ -10,12 +10,16 @@ const userRoutes = require('./api/routes/user');
 const receiptRoutes = require('./api/routes/receipts');
 const inventoryRoutes = require('./api/routes/inventory');
 
+/**
+ * Mongoose connection to the MongoDb
+ */
 mongoose.connect(
   "mongodb+srv://movie-rental:movie-rental@cluster0-q3tdj.mongodb.net/test?retryWrites=true&w=majority",
   {
     useNewUrlParser: true
   }
 );
+// Promisify everything
 mongoose.Promise = global.Promise;
 
 app.use(morgan("dev"));

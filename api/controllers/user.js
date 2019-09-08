@@ -4,6 +4,12 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
 
+/**
+ * Handler that a new user can sign up to the platform
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.user_signup = (req, res, next) => {
   User.find({ email: req.body.email })
     .exec()
@@ -44,6 +50,12 @@ exports.user_signup = (req, res, next) => {
     });
 };
 
+/**
+ * Handler for the user login by providing a unique token that is valid for an hour
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.user_login = (req, res, next) => {
   User.find({ email: req.body.email })
     .exec()
@@ -67,7 +79,7 @@ exports.user_login = (req, res, next) => {
             },
             process.env.JWT_KEY,
             {
-              expiresIn: "1h"
+              expiresIn: "1h" // token is valid for only an hour. After that he must login again
             }
           );
           return res.status(200).json({
@@ -88,6 +100,12 @@ exports.user_login = (req, res, next) => {
     });
 };
 
+/**
+ * Handler that deletes a user
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.user_delete = (req, res, next) => {
   User.remove({ _id: req.params.userId })
     .exec()
