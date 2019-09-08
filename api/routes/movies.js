@@ -2,8 +2,8 @@ const express = require("express");
 const router = express.Router();
 const multer = require('multer');
 const checkAuth = require('../middleware/check-auth');
-const ProductsController = require('../controllers/products');
-const OrdersController = require('../controllers/orders');
+const MoviesController = require('../controllers/movies');
+const RentalsController = require('../controllers/rentals');
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -31,20 +31,20 @@ const upload = multer({
   fileFilter: fileFilter
 });
 
-router.get("/", ProductsController.products_get_all);
+router.get("/", MoviesController.movie_get_all);
 
-router.post("/", checkAuth, ProductsController.products_create_product);
+router.post("/", checkAuth, MoviesController.movie_create_movie);
 
-router.get("/genre/:genre", ProductsController.products_get_genre);
+router.get("/genre/:genre", MoviesController.movie_get_genre);
 
-router.get("/year/:year", ProductsController.products_get_year);
+router.get("/year/:year", MoviesController.movie_get_year);
 
-router.get("/:productId", ProductsController.products_get_product);
+router.get("/:movieId", MoviesController.movie_get_movie);
 
-router.post("/:productId/order", OrdersController.orders_make_order);
+router.post("/:movieId/rent", RentalsController.rentals_make_rental);
 
-router.patch("/:productId", checkAuth, ProductsController.products_update_product);
+router.patch("/:movieId", checkAuth, MoviesController.movie_update_movie);
 
-router.delete("/:productId", checkAuth, ProductsController.products_delete);
+router.delete("/:movieId", checkAuth, MoviesController.movie_delete);
 
 module.exports = router;

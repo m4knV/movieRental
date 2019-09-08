@@ -9,8 +9,8 @@ router.get("/", checkAuth, ReceiptsController.receipts_get_all);
 
 router.post("/", checkAuth, ReceiptsController.receipts_create_receipts);
 
-// router.get("/:orderId", checkAuth, ReceiptsController.receipts_get_receipts);
+// router.get("/:rentalId", checkAuth, ReceiptsController.receipts_get_receipts);
 //
-// router.delete("/:orderId", checkAuth, ReceiptsController.receipts_delete_receipts);
+// router.delete("/:rentalId", checkAuth, ReceiptsController.receipts_delete_receipts);
 
 module.exports = router;

@@ -1,26 +1,26 @@
 const mongoose = require("mongoose");
 
-const Order = require("../models/order");
-const Product = require("../models/product");
+const Rental = require("../models/rental");
+const Movie = require("../models/movie");
 const Inventory = require("../models/inventory");
 
-exports.orders_get_all = (req, res, next) => {
-  Order.find()
-    .select("product user daysPassed _id")
-    .populate("product", "name")
+exports.rentals_get_all = (req, res, next) => {
+  Rental.find()
+    .select("movie user daysPassed _id")
+    .populate("movie", "name")
     .exec()
     .then(docs => {
       res.status(200).json({
         count: docs.length,
-        orders: docs.map(doc => {
+        rentals: docs.map(doc => {
           return {
             _id: doc._id,
-            product: doc.product,
+            movie: doc.movie,
             user: doc.user,
             daysPassed: doc.daysPassed,
             request: {
               type: "GET",
-              url: "http://localhost:3000/orders/" + doc._id
+              url: "http://localhost:3000/rentals/" + doc._id
             }
           };
         })
@@ -33,35 +33,35 @@ exports.orders_get_all = (req, res, next) => {
     });
 };
 
-exports.orders_create_order = (req, res, next) => {
-  Product.findById(req.body.productId)
-    .then(product => {
-      if (!product) {
+exports.rentals_create_rental = (req, res, next) => {
+  Movie.findById(req.body.movieId)
+    .then(movie => {
+      if (!movie) {
         return res.status(404).json({
-          message: "Product not found"
+          message: "Movie not found"
         });
       }
-      const order = new Order({
+      const rental = new Rental({
         _id: mongoose.Types.ObjectId(),
-        product: req.body.productId,
+        movie: req.body.movieId,
         user: req.body.userId,
         daysPassed: req.body.daysPassed
       });
-      return order.save();
+      return rental.save();
     })
     .then(result => {
       console.log(result);
       res.status(201).json({
-        message: "Order stored",
-        createdOrder: {
+        message: "Rental stored",
+        createdRental: {
           _id: result._id,
-          product: result.product,
+          movie: result.movie,
           user: result.user,
           daysPassed: result.daysPassed
         },
         request: {
           type: "GET",
-          url: "http://localhost:3000/orders/" + result._id
+          url: "http://localhost:3000/rentals/" + result._id
         }
       });
     })
@@ -73,42 +73,42 @@ exports.orders_create_order = (req, res, next) => {
     });
 };
 
-exports.orders_make_order = (req, res, next) => {
-  const productId = req.params.productId;
-  Product.findById(productId)
-      .then(product => {
-        if (!product) {
+exports.rentals_make_rental = (req, res, next) => {
+  const movieId = req.params.movieId;
+  Movie.findById(movieId)
+      .then(movie => {
+        if (!movie) {
           return res.status(404).json({
-            message: "Product not found"
+            message: "Movie not found"
           });
         }
-        const order = new Order({
+        const rental = new Rental({
           _id: mongoose.Types.ObjectId(),
-          product: product._id,
+          movie: movie._id,
           user: "5d6d1720062f6d1006ee21e7",
-          daysPassed: 1
+          daysPassed: 5
         });
         const inventory = new Inventory({
           _id: mongoose.Types.ObjectId(),
-          product: product._id,
+          movie: movie._id,
           available: "yes"
         });
-        order.save();
+        rental.save();
         return inventory.save();
       })
       .then(result => {
         console.log(result);
         res.status(201).json({
-          message: "Order stored",
-          createdOrder: {
+          message: "Rental stored",
+          createdRental: {
             _id: result._id,
-            product: result.product,
+            movie: result.movie,
             user: result.user,
             daysPassed: result.daysPassed
           },
           request: {
             type: "GET",
-            url: "http://localhost:3000/orders/" + result._id
+            url: "http://localhost:3000/rentals/" + result._id
           }
         });
       })
@@ -120,21 +120,21 @@ exports.orders_make_order = (req, res, next) => {
       });
 };
 
-exports.orders_get_order = (req, res, next) => {
-  Order.findById(req.params.orderId)
-    .populate("product")
+exports.rentals_get_rental = (req, res, next) => {
+  Rental.findById(req.params.rentalId)
+    .populate("movie")
     .exec()
-    .then(order => {
-      if (!order) {
+    .then(rental => {
+      if (!rental) {
         return res.status(404).json({
-          message: "Order not found"
+          message: "Rental not found"
         });
       }
       res.status(200).json({
-        order: order,
+        rental: rental,
         request: {
           type: "GET",
-          url: "http://localhost:3000/orders"
+          url: "http://localhost:3000/rentals"
         }
       });
     })
@@ -145,16 +145,16 @@ exports.orders_get_order = (req, res, next) => {
     });
 };
 
-exports.orders_delete_order = (req, res, next) => {
-  Order.remove({ _id: req.params.orderId })
+exports.rentals_delete_rental = (req, res, next) => {
+  Rental.remove({ _id: req.params.rentalId })
     .exec()
     .then(result => {
       res.status(200).json({
-        message: "Order deleted",
+        message: "Rental deleted",
         request: {
           type: "POST",
-          url: "http://localhost:3000/orders",
-          body: { productId: "ID", quantity: "Number" }
+          url: "http://localhost:3000/rentals",
+          body: { movieId: "ID", quantity: "Number" }
         }
       });
     })

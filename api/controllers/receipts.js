@@ -1,25 +1,25 @@
 const mongoose = require("mongoose");
 
 const Receipt = require("../models/receipt");
-const Order = require("../models/order");
+const Rental = require("../models/rental");
 const InventoryController = require("../controllers/inventory");
 
 exports.receipts_get_all = (req, res, next) => {
     Receipt.find()
-        .select("order user _id")
+        .select("rental user _id")
         .exec()
         .then(docs => {
             res.status(200).json({
                 count: docs.length,
-                orders: docs.map(doc => {
+                rentals: docs.map(doc => {
                     return {
                         _id: doc._id,
-                        order: doc.orderId,
+                        rental: doc.rentalId,
                         user: doc.userId,
                         price: doc.price,
                         request: {
                             type: "GET",
-                            url: "http://localhost:3000/orders/" + doc._id
+                            url: "http://localhost:3000/rentals/" + doc._id
                         }
                     };
                 })
@@ -32,24 +32,24 @@ exports.receipts_get_all = (req, res, next) => {
         });
 };
 
-//TODO: Get the days from Order collection
+//TODO: Get the days from Rental collection
 exports.receipts_create_receipts = (req, res, next) => {
-    Order.findById(req.body.orderId)
-        .then(order => {
-            if (!order) {
+    Rental.findById(req.body.rentalId)
+        .then(rental => {
+            if (!rental) {
                 return res.status(404).json({
-                    message: "Order not found"
+                    message: "Rental not found"
                 });
             }
             console.log("These are the days:");
-            console.log(order.daysPassed);
+            console.log(rental.daysPassed);
             console.log("this is the end of days!");
 
             let finalPrice;
-            if (order.daysPassed <= 3) {
-                finalPrice = order.daysPassed * 1;
+            if (rental.daysPassed <= 3) {
+                finalPrice = rental.daysPassed * 1;
             } else {
-                finalPrice = 3 + ((order.daysPassed - 3) * 0.5);
+                finalPrice = 3 + ((rental.daysPassed - 3) * 0.5);
             }
             console.log("The final Price is:");
             console.log(finalPrice);
@@ -57,7 +57,7 @@ exports.receipts_create_receipts = (req, res, next) => {
 
             const receipt = new Receipt({
                 _id: mongoose.Types.ObjectId(),
-                order: req.body.orderId,
+                rental: req.body.rentalId,
                 price: finalPrice
             });
             return receipt.save();
@@ -66,14 +66,14 @@ exports.receipts_create_receipts = (req, res, next) => {
             console.log(result);
             res.status(201).json({
                 message: "Receipt stored",
-                createdOrder: {
+                createdRental: {
                     _id: result._id,
-                    order: result.orderId,
+                    rental: result.rentalId,
                     price: result.price
                 },
                 request: {
                     type: "GET",
-                    url: "http://localhost:3000/orders/" + result._id
+                    url: "http://localhost:3000/rentals/" + result._id
                 }
             });
         })
@@ -85,25 +85,25 @@ exports.receipts_create_receipts = (req, res, next) => {
         });
 };
 
-exports.receipts_return_order = (req, res, next) => {
-    const orderId = req.params.orderId;
-    Order.findById(orderId)
-        .then(order => {
-            if (!order) {
+exports.receipts_return_rental = (req, res, next) => {
+    const rentalId = req.params.rentalId;
+    Rental.findById(rentalId)
+        .then(rental => {
+            if (!rental) {
                 return res.status(404).json({
-                    message: "Order not found"
+                    message: "Rental not found"
                 });
             }
 
             let finalPrice;
-            if (order.daysPassed <= 3) {
-                finalPrice = order.daysPassed * 1;
+            if (rental.daysPassed <= 3) {
+                finalPrice = rental.daysPassed * 1;
             } else {
-                finalPrice = 3 + ((order.daysPassed - 3) * 0.5);
+                finalPrice = 3 + ((rental.daysPassed - 3) * 0.5);
             }
             const receipt = new Receipt({
                 _id: mongoose.Types.ObjectId(),
-                order: orderId,
+                rental: rentalId,
                 price: finalPrice
             });
             return receipt.save();
@@ -112,14 +112,14 @@ exports.receipts_return_order = (req, res, next) => {
             console.log(result);
             res.status(201).json({
                 message: "Receipt stored",
-                createdOrder: {
+                createdRental: {
                     _id: result._id,
-                    order: result.orderId,
+                    rental: result.rentalId,
                     price: result.price
                 },
                 request: {
                     type: "GET",
-                    url: "http://localhost:3000/orders/" + result._id
+                    url: "http://localhost:3000/rentals/" + result._id
                 }
             });
         })
@@ -131,21 +131,21 @@ exports.receipts_return_order = (req, res, next) => {
         });
 };
 
-// exports.orders_get_order = (req, res, next) => {
-//     Order.findById(req.params.orderId)
-//         .populate("product")
+// exports.rentals_get_rental = (req, res, next) => {
+//     Rental.findById(req.params.rentalId)
+//         .populate("movie")
 //         .exec()
-//         .then(order => {
-//             if (!order) {
+//         .then(rental => {
+//             if (!rental) {
 //                 return res.status(404).json({
-//                     message: "Order not found"
+//                     message: "Rental not found"
 //                 });
 //             }
 //             res.status(200).json({
-//                 order: order,
+//                 rental: rental,
 //                 request: {
 //                     type: "GET",
-//                     url: "http://localhost:3000/orders"
+//                     url: "http://localhost:3000/rentals"
 //                 }
 //             });
 //         })
@@ -156,16 +156,16 @@ exports.receipts_return_order = (req, res, next) => {
 //         });
 // };
 //
-// exports.orders_delete_order = (req, res, next) => {
-//     Order.remove({ _id: req.params.orderId })
+// exports.rentals_delete_rental = (req, res, next) => {
+//     Rental.remove({ _id: req.params.rentalId })
 //         .exec()
 //         .then(result => {
 //             res.status(200).json({
-//                 message: "Order deleted",
+//                 message: "Rental deleted",
 //                 request: {
 //                     type: "POST",
-//                     url: "http://localhost:3000/orders",
-//                     body: { productId: "ID", quantity: "Number" }
+//                     url: "http://localhost:3000/rentals",
+//                     body: { movieId: "ID", quantity: "Number" }
 //                 }
 //             });
 //         })

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const productSchema = mongoose.Schema({
+const movieSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     title: { type: String, required: true },
     genre: { type: String, required: true },
@@ -8,4 +8,4 @@ const productSchema = mongoose.Schema({
     year: { type: Number, required: true }
 });
 
-module.exports = mongoose.model('Product', productSchema);
+module.exports = mongoose.model('Movie', movieSchema);

@@ -1,24 +1,24 @@
 const mongoose = require("mongoose");
 
-const Product = require("../models/product");
+const Movie = require("../models/movie");
 const Inventory = require("../models/inventory");
 
 exports.inventory_get_all = (req, res, next) => {
     Inventory.find()
-        .select("product available _id")
-        .populate("product", "available")
+        .select("movie available _id")
+        .populate("movie", "available")
         .exec()
         .then(docs => {
             res.status(200).json({
                 count: docs.length,
-                orders: docs.map(doc => {
+                rentals: docs.map(doc => {
                     return {
                         _id: doc._id,
-                        product: doc.product,
+                        movie: doc.movie,
                         available: doc.available,
                         request: {
                             type: "GET",
-                            url: "http://localhost:3000/orders/" + doc._id
+                            url: "http://localhost:3000/rentals/" + doc._id
                         }
                     };
                 })
