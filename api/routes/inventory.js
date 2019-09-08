@@ -5,7 +5,7 @@ const checkAuth = require('../middleware/check-auth');
 const InventoryController = require("../controllers/inventory");
 
 
-// Handle incoming GET requests to /orders
+// Handle GET requests to /inventory
 router.get("/", checkAuth, InventoryController.inventory_get_all);
 
 module.exports = router;

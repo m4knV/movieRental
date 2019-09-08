@@ -1,7 +1,7 @@
 {
   "name": "rest-shop",
   "version": "1.0.0",
-  "description": "A Node.js RESTful API Tutorial Project (Build a simple shop API)",
+  "description": "A Node.js RESTful API Online Movie Rentals",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -12,7 +12,7 @@
     "restful",
     "api"
   ],
-  "author": "Maximilian Schwarzmüller",
+  "author": "Nikolaos Makaritis",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^1.0.3",

@@ -4,18 +4,22 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
-const productRoutes = require("./api/routes/products");
-const orderRoutes = require("./api/routes/orders");
+const movieRoutes = require("./api/routes/movies");
+const rentalRoutes = require("./api/routes/rentals");
 const userRoutes = require('./api/routes/user');
 const receiptRoutes = require('./api/routes/receipts');
 const inventoryRoutes = require('./api/routes/inventory');
 
+/**
+ * Mongoose connection to the MongoDb
+ */
 mongoose.connect(
   "mongodb+srv://movie-rental:movie-rental@cluster0-q3tdj.mongodb.net/test?retryWrites=true&w=majority",
   {
     useNewUrlParser: true
   }
 );
+// Promisify everything
 mongoose.Promise = global.Promise;
 
 app.use(morgan("dev"));
@@ -37,8 +41,8 @@ app.use((req, res, next) => {
 });
 
 // Routes which should handle requests
-app.use("/products", productRoutes);
-app.use("/orders", orderRoutes);
+app.use("/movies", movieRoutes);
+app.use("/rentals", rentalRoutes);
 app.use("/user", userRoutes);
 app.use("/receipts", receiptRoutes);
 app.use("/inventory", inventoryRoutes);

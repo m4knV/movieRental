@@ -1,14 +1,20 @@
 const mongoose = require("mongoose");
-const Product = require("../models/product");
+const Movie = require("../models/movie");
 
-exports.products_get_all = (req, res, next) => {
-  Product.find()
+/**
+ * Handler that displays all the available movies
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.movie_get_all = (req, res, next) => {
+  Movie.find()
     .select("_id title genre descr year")
     .exec()
     .then(docs => {
       const response = {
         count: docs.length,
-        products: docs.map(doc => {
+        movies: docs.map(doc => {
           return {
             title: doc.title,
             genre: doc.genre,
@@ -17,7 +23,7 @@ exports.products_get_all = (req, res, next) => {
             _id: doc._id,
             request: {
               type: "GET",
-              url: "http://localhost:3000/products/" + doc._id
+              url: "http://localhost:3000/movies/" + doc._id
             }
           };
         })
@@ -38,19 +44,25 @@ exports.products_get_all = (req, res, next) => {
     });
 };
 
-exports.products_get_genre = (req, res, next) => {
+/**
+ * Handler that displays the available movies based on their genre
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.movie_get_genre = (req, res, next) => {
   const genre = req.params.genre;
-  Product.find({"genre": genre})
+  Movie.find({"genre": genre})
       .select("_id title genre descr year")
       .exec()
       .then(doc => {
         console.log("From database", doc);
         if (doc) {
           res.status(200).json({
-            product: doc,
+            movie: doc,
             request: {
               type: "GET",
-              url: "http://localhost:3000/products"
+              url: "http://localhost:3000/movies"
             }
           });
         } else {
@@ -65,19 +77,25 @@ exports.products_get_genre = (req, res, next) => {
       });
 };
 
-exports.products_get_year = (req, res, next) => {
+/**
+ * Handler that displays the available movies based on their year of production
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.movie_get_year = (req, res, next) => {
   const year = req.params.year;
-  Product.find({"year": year})
+  Movie.find({"year": year})
       .select("_id title genre descr year")
       .exec()
       .then(doc => {
         console.log("From database", doc);
         if (doc) {
           res.status(200).json({
-            product: doc,
+            movie: doc,
             request: {
               type: "GET",
-              url: "http://localhost:3000/products"
+              url: "http://localhost:3000/movies"
             }
           });
         } else {
@@ -92,21 +110,27 @@ exports.products_get_year = (req, res, next) => {
       });
 };
 
-exports.products_create_product = (req, res, next) => {
-  const product = new Product({
+/**
+ * Handler that creates a new movie title by a POST request with a body
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.movie_create_movie = (req, res, next) => {
+  const movie = new Movie({
     _id: new mongoose.Types.ObjectId(),
     title: req.body.title,
     genre: req.body.genre,
     descr: req.body.descr,
     year: req.body.year,
   });
-  product
+  movie
     .save()
     .then(result => {
       console.log(result);
       res.status(201).json({
-        message: "Created product successfully",
-        createdProduct: {
+        message: "Created movie successfully",
+        createdMovie: {
           title: result.title,
           genre: result.genre,
           descr: result.descr,
@@ -114,7 +138,7 @@ exports.products_create_product = (req, res, next) => {
           _id: result._id,
           request: {
             type: "GET",
-            url: "http://localhost:3000/products/" + result._id
+            url: "http://localhost:3000/movies/" + result._id
           }
         }
       });
@@ -127,19 +151,25 @@ exports.products_create_product = (req, res, next) => {
     });
 };
 
-exports.products_get_product = (req, res, next) => {
-  const id = req.params.productId;
-  Product.findById(id)
+/**
+ * Handler that displays a specific movie based on its id
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.movie_get_movie = (req, res, next) => {
+  const id = req.params.movieId;
+  Movie.findById(id)
     .select("_id title genre descr year")
     .exec()
     .then(doc => {
       console.log("From database", doc);
       if (doc) {
         res.status(200).json({
-          product: doc,
+          movie: doc,
           request: {
             type: "GET",
-            url: "http://localhost:3000/products"
+            url: "http://localhost:3000/movies"
           }
         });
       } else {
@@ -153,21 +183,26 @@ exports.products_get_product = (req, res, next) => {
       res.status(500).json({ error: err });
     });
 };
-
-exports.products_update_product = (req, res, next) => {
-  const id = req.params.productId;
+/**
+ * Handler that updates a movies
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.movie_update_movie = (req, res, next) => {
+  const id = req.params.movieId;
   const updateOps = {};
   for (const ops of req.body) {
     updateOps[ops.propName] = ops.value;
   }
-  Product.update({ _id: id }, { $set: updateOps })
+  Movie.update({ _id: id }, { $set: updateOps })
     .exec()
     .then(result => {
       res.status(200).json({
-        message: "Product updated",
+        message: "Movie updated",
         request: {
           type: "GET",
-          url: "http://localhost:3000/products/" + id
+          url: "http://localhost:3000/movies/" + id
         }
       });
     })
@@ -179,16 +214,22 @@ exports.products_update_product = (req, res, next) => {
     });
 };
 
-exports.products_delete = (req, res, next) => {
-  const id = req.params.productId;
-  Product.remove({ _id: id })
+/**
+ * Handler that deletes a movie
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.movie_delete = (req, res, next) => {
+  const id = req.params.movieId;
+  Movie.remove({ _id: id })
     .exec()
     .then(result => {
       res.status(200).json({
-        message: "Product deleted",
+        message: "Movie deleted",
         request: {
           type: "POST",
-          url: "http://localhost:3000/products",
+          url: "http://localhost:3000/movies",
           body: { name: "String", price: "Number" }
         }
       });

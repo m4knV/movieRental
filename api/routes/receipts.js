@@ -4,13 +4,10 @@ const checkAuth = require('../middleware/check-auth');
 
 const ReceiptsController = require('../controllers/receipts');
 
-// Handle incoming GET requests to /receipts
+// Handle GET requests to /receipts
 router.get("/", checkAuth, ReceiptsController.receipts_get_all);
 
+// Handle POST requests to /receipts
 router.post("/", checkAuth, ReceiptsController.receipts_create_receipts);
-
-// router.get("/:orderId", checkAuth, ReceiptsController.receipts_get_receipts);
-//
-// router.delete("/:orderId", checkAuth, ReceiptsController.receipts_delete_receipts);
 
 module.exports = router;
