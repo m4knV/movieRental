@@ -41,7 +41,7 @@ router.get("/year/:year", MoviesController.movie_get_year);
 router.get("/:movieId", MoviesController.movie_get_movie);
 
 // Handle POST requests
-router.post("/", checkAuth, MoviesController.movie_create_movie);
+router.post("/", MoviesController.movie_create_movie);
 
 router.post("/:movieId/rent", RentalsController.rentals_make_rental);
 
