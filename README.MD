@@ -18,11 +18,9 @@ first three.
 Created a sample unit test for movies.js Route.
 
 ## Additional Information for the Project
-```
 
--------------------------
-Project Directories Tree
--------------------------
+#### Project Directories Tree
+```
 .
 ├── api
 │   ├── controllers
@@ -56,17 +54,17 @@ Project Directories Tree
 └── tests
     └── movies.js
 
----------------------
-package.json Scripts
----------------------
+```
+
+#### package.json Scripts
+```
 "scripts": {
     "test": "mocha tests/movies.js", // test script
     "start": "nodemon server.js"     // server script
   }
-
--------------
-nodemon.json
--------------
+```
+#### nodemon.json
+```
 {
     "env": {
         "JWT_KEY": "secret"
