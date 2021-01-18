@@ -1,5 +1,5 @@
 # A RESTful API for Online Movie Rental using Node.js, MongoDB and Mongoose
-Create a proof of concept app of an “Online Movies Store” from where users can perform all the
+Create an application of an “Online Movies Store” from where users can perform all the
 base actions in order to search and rent/book and pay an online movie ”Title”. When the user
 purchase a “Title” he/she can play the movie as many times as he/she wants and the charge is
 based on a per day fee.
